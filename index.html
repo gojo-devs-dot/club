@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Club Info</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--ink:#14213d;--mute:#5b6478;--line:#cfd5e4;--card:#fff;--acc:#2b50ff;--hi:#ffe566;--ok:#0a7d4f}
+@media(prefers-color-scheme:dark){:root{--bg:#10131c;--ink:#e8ecf7;--mute:#98a1b8;--line:#2a3144;--card:#181d2a;--acc:#7b93ff;--hi:#5a4b00}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Bricolage Grotesque",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;
+background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.88;z-index:-1}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-bottom:2px solid var(--ink);background:var(--bg);flex-wrap:wrap}
+h1{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+h1 span{background:var(--hi);padding:0 6px}
+main{max-width:960px;margin:0 auto;padding:20px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:2px solid var(--ink);background:var(--card);padding:8px 14px;border-radius:6px;font-weight:600}
+button:hover{background:var(--hi)}
+button.p{background:var(--acc);border-color:var(--acc);color:#fff}
+button.p:hover{filter:brightness(1.1)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input,textarea,select{width:100%;padding:9px 10px;border:2px solid var(--line);border-radius:6px;background:var(--card)}
+.gate{text-align:center;padding:64px 12px}
+.gate h2{font-size:2rem;margin:0 0 8px}
+.gate p{color:var(--mute);max-width:46ch;margin:0 auto 20px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.bar input{flex:1 1 200px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:1.1rem}
+.card p{margin:0;color:var(--mute);font-size:.95rem}
+.card a{color:var(--acc);font-weight:600;word-break:break-all}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:.8rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute)}
+.meta{font-size:.8rem;color:var(--mute);margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.del{padding:2px 8px;font-size:.8rem}
+dialog{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);width:min(440px,92vw);padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.empty{padding:36px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:8px}
+.err{color:#c0392b;font-size:.9rem;margin-top:8px}
+.user{display:flex;align-items:center;gap:10px;font-size:.9rem}
+.user img{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Club <span>Info</span></h1>
+  <div class="user" id="user" hidden>
+    <img id="avatar" alt="">
+    <span id="uname"></span>
+    <button id="out">Se déconnecter</button>
+  </div>
+</header>
+
+<main>
+  <section class="gate" id="gate">
+    <h2>Réservé aux membres du club</h2>
+    <p>Connecte-toi avec Google pour voir les projets, les liens utiles et ajouter les tiens.</p>
+    <button class="p" id="in">Se connecter avec Google</button>
+    <div class="err" id="gerr" role="alert"></div>
+  </section>
+
+  <section id="app" hidden>
+    <div class="tabs" role="group" aria-label="Catégorie">
+      <button data-t="project" aria-pressed="true">Projets</button>
+      <button data-t="link" aria-pressed="false">Liens utiles</button>
+    </div>
+    <div class="bar">
+      <input id="q" type="search" placeholder="Rechercher un titre, un tag…" aria-label="Rechercher">
+      <button class="p" id="add">Ajouter</button>
+    </div>
+    <div class="grid" id="list"></div>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <form method="dialog" id="f">
+    <h2 style="margin:0" id="dtitle">Ajouter</h2>
+    <label for="ft">Titre</label><input id="ft" required maxlength="80">
+    <label for="fu">URL</label><input id="fu" type="url" required placeholder="https://…">
+    <label for="fd">Description</label><textarea id="fd" rows="3" maxlength="300"></textarea>
+    <label for="fg">Tags (séparés par des virgules)</label><input id="fg" placeholder="python, web, jeu">
+    <div class="err" id="ferr" role="alert"></div>
+    <div class="row">
+      <button type="button" id="cancel">Annuler</button>
+      <button class="p" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+// 1) Colle ici la config de ton projet Firebase (Paramètres du projet > Tes applications > Web)
+const firebaseConfig = {
+  apiKey: "VOTRE_API_KEY",
+  authDomain: "VOTRE_PROJET.firebaseapp.com",
+  projectId: "VOTRE_PROJET",
+  appId: "VOTRE_APP_ID"
+};
+// 2) Les admins peuvent tout supprimer
+const ADMINS = ["ton.email@gmail.com"];
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+let user = null, tab = "project", items = [], unsub = null;
+
+$("in").onclick = async () => {
+  $("gerr").textContent = "";
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch (e) { $("gerr").textContent = "Connexion impossible : " + e.code; }
+};
+$("out").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, u => {
+  user = u;
+  $("gate").hidden = !!u; $("app").hidden = !u; $("user").hidden = !u;
+  if (unsub) { unsub(); unsub = null; }
+  if (!u) return;
+  $("avatar").src = u.photoURL || "";
+  $("uname").textContent = u.displayName || u.email;
+  unsub = onSnapshot(query(collection(db, "items"), orderBy("createdAt", "desc")),
+    s => { items = s.docs.map(d => ({id: d.id, ...d.data()})); render(); },
+    e => { $("list").innerHTML = ""; const d = document.createElement("div"); d.className = "empty"; d.textContent = "Accès refusé ou base non configurée (" + e.code + ")."; $("list").append(d); });
+});
+
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  tab = b.dataset.t;
+  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  render();
+});
+$("q").oninput = render;
+
+function render() {
+  const q = $("q").value.trim().toLowerCase();
+  const list = items.filter(i => i.type === tab && (!q || (i.title + " " + (i.tags || []).join(" ") + " " + (i.desc || "")).toLowerCase().includes(q)));
+  const box = $("list"); box.innerHTML = "";
+  if (!list.length) {
+    const d = document.createElement("div"); d.className = "empty";
+    d.textContent = q ? "Aucun résultat." : "Rien ici pour l’instant. Ajoute le premier élément.";
+    box.append(d); return;
+  }
+  for (const i of list) {
+    const c = document.createElement("article"); c.className = "card";
+    const h = document.createElement("h3"); h.textContent = i.title;
+    const a = document.createElement("a"); a.href = i.url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = i.url;
+    c.append(h, a);
+    if (i.desc) { const p = document.createElement("p"); p.textContent = i.desc; c.append(p); }
+    if (i.tags && i.tags.length) {
+      const t = document.createElement("div"); t.className = "tags";
+      i.tags.forEach(x => { const s = document.createElement("span"); s.className = "tag"; s.textContent = x; t.append(s); });
+      c.append(t);
+    }
+    const m = document.createElement("div"); m.className = "meta";
+    const by = document.createElement("span"); by.textContent = "par " + (i.authorName || "membre"); m.append(by);
+    if (user && (i.uid === user.uid || ADMINS.includes(user.email))) {
+      const d = document.createElement("button"); d.className = "del"; d.textContent = "Supprimer";
+      d.onclick = async () => { if (confirm("Supprimer « " + i.title + " » ?")) await deleteDoc(doc(db, "items", i.id)); };
+      m.append(d);
+    }
+    c.append(m); box.append(c);
+  }
+}
+
+$("add").onclick = () => {
+  $("dtitle").textContent = tab === "project" ? "Ajouter un projet" : "Ajouter un lien";
+  $("f").reset(); $("ferr").textContent = ""; $("dlg").showModal();
+};
+$("cancel").onclick = () => $("dlg").close();
+$("f").onsubmit = async e => {
+  e.preventDefault();
+  const url = $("fu").value.trim();
+  if (!/^https?:\/\//i.test(url)) { $("ferr").textContent = "L’URL doit commencer par http:// ou https://"; return; }
+  try {
+    await addDoc(collection(db, "items"), {
+      type: tab, title: $("ft").value.trim(), url, desc: $("fd").value.trim(),
+      tags: $("fg").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 8),
+      uid: user.uid, authorName: user.displayName || user.email, createdAt: serverTimestamp()
+    });
+    $("dlg").close();
+  } catch (err) { $("ferr").textContent = "Enregistrement refusé : " + err.code; }
+};
+</script>
+</body>
+</html>
