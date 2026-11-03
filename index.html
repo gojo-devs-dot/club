@@ -63,9 +63,13 @@ label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
 <main>
   <section class="gate" id="gate">
     <h2>Réservé aux membres du club</h2>
-    <p>Connecte-toi avec Google pour voir les projets, les liens utiles et ajouter les tiens.</p>
-    <button class="p" id="in">Se connecter avec Google</button>
-    <div class="err" id="gerr" role="alert"></div>
+    <p>Connecte-toi avec ton compte du club pour voir les projets, les liens utiles et ajouter les tiens.</p>
+    <form id="login" style="max-width:320px;margin:0 auto;text-align:left">
+      <label for="le">Email</label><input id="le" type="email" autocomplete="username" required>
+      <label for="lp">Mot de passe</label><input id="lp" type="password" autocomplete="current-password" required>
+      <button class="p" type="submit" style="width:100%;margin-top:16px">Se connecter</button>
+      <div class="err" id="gerr" role="alert"></div>
+    </form>
   </section>
 
   <section id="app" hidden>
@@ -98,7 +102,7 @@ label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // 1) Colle ici la config de ton projet Firebase (Paramètres du projet > Tes applications > Web)
@@ -117,10 +121,16 @@ const db = getFirestore(app);
 const $ = id => document.getElementById(id);
 let user = null, tab = "project", items = [], unsub = null;
 
-$("in").onclick = async () => {
+$("login").onsubmit = async e => {
+  e.preventDefault();
   $("gerr").textContent = "";
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch (e) { $("gerr").textContent = "Connexion impossible : " + e.code; }
+  try { await signInWithEmailAndPassword(auth, $("le").value.trim(), $("lp").value); $("lp").value = ""; }
+  catch (err) {
+    const bad = ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"];
+    $("gerr").textContent = bad.includes(err.code) ? "Email ou mot de passe incorrect." :
+      err.code === "auth/too-many-requests" ? "Trop d’essais. Réessaie dans quelques minutes." :
+      "Connexion impossible : " + err.code;
+  }
 };
 $("out").onclick = () => signOut(auth);
 
