@@ -6,201 +6,250 @@
 <title>Club Info</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f7fb;--ink:#14213d;--mute:#5b6478;--line:#cfd5e4;--card:#fff;--acc:#2b50ff;--hi:#ffe566;--ok:#0a7d4f}
-@media(prefers-color-scheme:dark){:root{--bg:#10131c;--ink:#e8ecf7;--mute:#98a1b8;--line:#2a3144;--card:#181d2a;--acc:#7b93ff;--hi:#5a4b00}}
+:root{--bg:#f6f7fb;--ink:#14213d;--mute:#5b6478;--line:#cfd5e4;--card:#fff;--acc:#2b50ff;--hi:#ffe566;--bad:#c0392b}
+@media(prefers-color-scheme:dark){:root{--bg:#10131c;--ink:#e8ecf7;--mute:#98a1b8;--line:#2a3144;--card:#181d2a;--acc:#7b93ff;--hi:#5a4b00;--bad:#ff7b6b}}
 *{box-sizing:border-box}
 body{margin:0;font-family:"Bricolage Grotesque",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;
 background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
-body::before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.88;z-index:-1}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px;border-bottom:2px solid var(--ink);background:var(--bg);flex-wrap:wrap}
+body::before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.9;z-index:-1}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 20px;border-bottom:2px solid var(--ink);background:var(--bg);flex-wrap:wrap;position:sticky;top:0;z-index:5}
 h1{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
 h1 span{background:var(--hi);padding:0 6px}
-main{max-width:960px;margin:0 auto;padding:20px}
+main{max-width:1000px;margin:0 auto;padding:20px}
 button,input,textarea,select{font:inherit;color:inherit}
-button{cursor:pointer;border:2px solid var(--ink);background:var(--card);padding:8px 14px;border-radius:6px;font-weight:600}
-button:hover{background:var(--hi)}
+button{cursor:pointer;border:2px solid var(--ink);background:var(--card);padding:7px 13px;border-radius:6px;font-weight:600}
+button:hover{background:var(--hi);color:#14213d}
+button:disabled{opacity:.5;cursor:wait}
 button.p{background:var(--acc);border-color:var(--acc);color:#fff}
-button.p:hover{filter:brightness(1.1)}
+button.p:hover{filter:brightness(1.12);background:var(--acc);color:#fff}
+button.s{padding:2px 9px;font-size:.8rem}
+button.x:hover{background:var(--bad);border-color:var(--bad);color:#fff}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 input,textarea,select{width:100%;padding:9px 10px;border:2px solid var(--line);border-radius:6px;background:var(--card)}
-.gate{text-align:center;padding:64px 12px}
+input[type=checkbox]{width:auto}
+.gate{text-align:center;padding:56px 12px}
 .gate h2{font-size:2rem;margin:0 0 8px}
 .gate p{color:var(--mute);max-width:46ch;margin:0 auto 20px}
-.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.bar input{flex:1 1 200px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
+.tabs button{white-space:nowrap}
 .tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-.card{background:var(--card);border:2px solid var(--ink);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.tabs b{font-weight:400;opacity:.7;margin-left:4px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.bar input{flex:1 1 200px}
+.bar select{width:auto}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{padding:1px 10px;font-size:.82rem;border:1px solid var(--line);border-radius:99px;font-weight:400;color:var(--mute)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.card{background:var(--card);border:2px solid var(--ink);border-left-width:8px;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.card.pin{border-color:var(--ink);box-shadow:4px 4px 0 var(--hi)}
+.card.past{opacity:.55}
 .card h3{margin:0;font-size:1.1rem}
-.card p{margin:0;color:var(--mute);font-size:.95rem}
+.card p{margin:0;color:var(--mute);font-size:.95rem;white-space:pre-wrap}
 .card a{color:var(--acc);font-weight:600;word-break:break-all}
+.top{display:flex;gap:6px;align-items:center;font-size:.82rem;color:var(--mute)}
+.badge{border:1px solid var(--line);border-radius:4px;padding:0 7px;background:var(--bg)}
 .tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:.8rem;border:1px solid var(--line);border-radius:99px;padding:1px 9px;color:var(--mute)}
-.meta{font-size:.8rem;color:var(--mute);margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.del{padding:2px 8px;font-size:.8rem}
-dialog{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);width:min(440px,92vw);padding:18px}
-dialog::backdrop{background:rgba(0,0,0,.5)}
+.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:0 8px;color:var(--mute)}
+.meta{font-size:.8rem;color:var(--mute);margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.acts{display:flex;gap:6px}
+dialog{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);width:min(460px,94vw);padding:18px;max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.55)}
 label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
 .row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-.empty{padding:36px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:8px}
-.err{color:#c0392b;font-size:.9rem;margin-top:8px}
+.empty{padding:36px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:8px;grid-column:1/-1}
+.err{color:var(--bad);font-size:.9rem;margin-top:8px;min-height:1em}
 .user{display:flex;align-items:center;gap:10px;font-size:.9rem}
-.user img{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink)}
+.adm{background:var(--hi);color:#14213d;border-radius:4px;padding:0 6px;font-size:.75rem;font-weight:700}
+progress{width:100%}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+#toast.on{opacity:1}
 [hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <header>
   <h1>Club <span>Info</span></h1>
-  <div class="user" id="user" hidden>
-    <img id="avatar" alt="">
-    <span id="uname"></span>
-    <button id="out">Se déconnecter</button>
-  </div>
+  <div class="user" id="user" hidden><span id="uname"></span><span class="adm" id="adm" hidden>admin</span><button class="s" id="out">Déconnexion</button></div>
 </header>
-
 <main>
   <section class="gate" id="gate">
     <h2>Réservé aux membres du club</h2>
-    <p>Connecte-toi avec ton compte du club pour voir les projets, les liens utiles et ajouter les tiens.</p>
+    <p>Connecte-toi avec ton compte du club pour voir les projets, liens, fichiers et événements.</p>
     <form id="login" style="max-width:320px;margin:0 auto;text-align:left">
       <label for="le">Email</label><input id="le" type="email" autocomplete="username" required>
       <label for="lp">Mot de passe</label><input id="lp" type="password" autocomplete="current-password" required>
       <button class="p" type="submit" style="width:100%;margin-top:16px">Se connecter</button>
+      <button type="button" class="s" id="reset" style="margin-top:10px;border-color:var(--line)">Mot de passe oublié ?</button>
       <div class="err" id="gerr" role="alert"></div>
     </form>
   </section>
-
   <section id="app" hidden>
-    <div class="tabs" role="group" aria-label="Catégorie">
-      <button data-t="project" aria-pressed="true">Projets</button>
-      <button data-t="link" aria-pressed="false">Liens utiles</button>
-    </div>
+    <div class="tabs" id="tabs" role="group" aria-label="Catégorie"></div>
     <div class="bar">
-      <input id="q" type="search" placeholder="Rechercher un titre, un tag…" aria-label="Rechercher">
+      <input id="q" type="search" placeholder="Rechercher (touche /)" aria-label="Rechercher">
+      <select id="sort" aria-label="Trier"><option value="recent">Plus récents</option><option value="az">A → Z</option><option value="date">Date d’événement</option></select>
       <button class="p" id="add">Ajouter</button>
     </div>
+    <div class="chips" id="tagbar"></div>
     <div class="grid" id="list"></div>
   </section>
 </main>
 
 <dialog id="dlg">
   <form method="dialog" id="f">
-    <h2 style="margin:0" id="dtitle">Ajouter</h2>
+    <h2 style="margin:0" id="dtitle"></h2>
     <label for="ft">Titre</label><input id="ft" required maxlength="80">
-    <label for="fu">URL</label><input id="fu" type="url" required placeholder="https://…">
-    <label for="fd">Description</label><textarea id="fd" rows="3" maxlength="300"></textarea>
+    <div id="wu"><label for="fu">URL</label><input id="fu" type="url" placeholder="https://…"></div>
+    <div id="wf"><label for="ff">Fichier (20 Mo max)</label><input id="ff" type="file"><progress id="pg" max="100" value="0" hidden></progress></div>
+    <div id="ws"><label for="fs">Statut</label><select id="fs"><option value="idea">💡 Idée</option><option value="wip" selected>🔧 En cours</option><option value="done">✅ Terminé</option></select></div>
+    <div id="wd"><label for="fdt">Date</label><input id="fdt" type="date"></div>
+    <label for="fd">Description</label><textarea id="fd" rows="3" maxlength="400"></textarea>
     <label for="fg">Tags (séparés par des virgules)</label><input id="fg" placeholder="python, web, jeu">
+    <label id="wp"><input type="checkbox" id="fp"> Épingler en haut</label>
     <div class="err" id="ferr" role="alert"></div>
-    <div class="row">
-      <button type="button" id="cancel">Annuler</button>
-      <button class="p" type="submit">Enregistrer</button>
-    </div>
+    <div class="row"><button type="button" id="cancel">Annuler</button><button class="p" type="submit" id="save">Enregistrer</button></div>
   </form>
 </dialog>
+<div id="toast" role="status"></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {getAuth,signInWithEmailAndPassword,sendPasswordResetEmail,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import {getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {getStorage,ref,uploadBytesResumable,getDownloadURL,deleteObject} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
-// 1) Colle ici la config de ton projet Firebase (Paramètres du projet > Tes applications > Web)
+// 1) Colle ta config Firebase (Paramètres du projet > Tes applications > Web)
 const firebaseConfig = {
   apiKey: "AIzaSyD6e0KRzJnRJvRsBDbD5O80TAAVjox1EmA",
   authDomain: "club-informatique-d7602.firebaseapp.com",
   projectId: "club-informatique-d7602",
+  storageBucket: "club-informatique-d7602.firebasestorage.app", // à remplacer par la valeur de la console une fois Storage activé
   appId: "1:1097808241048:web:3e9d86f704c4e55f9fcbed"
 };
-// 2) Les admins peuvent tout supprimer
+// 2) Admins : modifient/suppriment tout, épinglent, envoient des fichiers
 const ADMINS = ["ton.email@gmail.com"];
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app), storage = getStorage(app);
 const $ = id => document.getElementById(id);
-let user = null, tab = "project", items = [], unsub = null;
+const el = (t, p = {}, ...c) => { const e = Object.assign(document.createElement(t), p); e.append(...c.filter(x => x != null && x !== false)); return e; };
+const TABS = {project: ["Projets", "#2b50ff"], link: ["Liens", "#0a7d4f"], file: ["Fichiers", "#c26a00"], event: ["Événements", "#a02bb5"]};
+const STATUS = {idea: "💡 Idée", wip: "🔧 En cours", done: "✅ Terminé"};
+let user = null, isAdmin = false, tab = "project", items = [], unsub = null, tagF = "", editing = null;
+
+function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
+const size = n => n > 1e6 ? (n / 1e6).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1e3)) + " Ko";
+const fdate = d => new Date(d + "T00:00").toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "long", year: "numeric"});
 
 $("login").onsubmit = async e => {
-  e.preventDefault();
-  $("gerr").textContent = "";
+  e.preventDefault(); $("gerr").textContent = "";
   try { await signInWithEmailAndPassword(auth, $("le").value.trim(), $("lp").value); $("lp").value = ""; }
   catch (err) {
     const bad = ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"];
-    $("gerr").textContent = bad.includes(err.code) ? "Email ou mot de passe incorrect." :
-      err.code === "auth/too-many-requests" ? "Trop d’essais. Réessaie dans quelques minutes." :
-      "Connexion impossible : " + err.code;
+    $("gerr").textContent = bad.includes(err.code) ? "Email ou mot de passe incorrect." : err.code === "auth/too-many-requests" ? "Trop d’essais. Réessaie dans quelques minutes." : "Connexion impossible : " + err.code;
   }
+};
+$("reset").onclick = async () => {
+  const m = $("le").value.trim(); if (!m) { $("gerr").textContent = "Entre ton email d’abord."; return; }
+  try { await sendPasswordResetEmail(auth, m); $("gerr").textContent = "Email de réinitialisation envoyé."; } catch (e) { $("gerr").textContent = "Envoi impossible : " + e.code; }
 };
 $("out").onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, u => {
-  user = u;
-  $("gate").hidden = !!u; $("app").hidden = !u; $("user").hidden = !u;
+  user = u; isAdmin = !!u && ADMINS.map(x => x.toLowerCase()).includes((u.email || "").toLowerCase());
+  $("gate").hidden = !!u; $("app").hidden = !u; $("user").hidden = !u; $("adm").hidden = !isAdmin;
   if (unsub) { unsub(); unsub = null; }
-  if (!u) return;
-  $("avatar").src = u.photoURL || "";
+  if (!u) { items = []; return; }
   $("uname").textContent = u.displayName || u.email;
   unsub = onSnapshot(query(collection(db, "items"), orderBy("createdAt", "desc")),
-    s => { items = s.docs.map(d => ({id: d.id, ...d.data()})); render(); },
-    e => { $("list").innerHTML = ""; const d = document.createElement("div"); d.className = "empty"; d.textContent = "Accès refusé ou base non configurée (" + e.code + ")."; $("list").append(d); });
+    s => { items = s.docs.map(d => { const x = d.data({serverTimestamps: "estimate"}); return {id: d.id, ...x, createdAt: x.createdAt?.toMillis?.() || Date.now()}; }); render(); },
+    e => { $("list").replaceChildren(el("div", {className: "empty", textContent: "Accès refusé ou base non configurée (" + e.code + ")."})); });
 });
 
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  tab = b.dataset.t;
-  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-pressed", x === b));
-  render();
-});
-$("q").oninput = render;
+function setTab(t) { tab = t; tagF = ""; $("sort").value = t === "event" ? "date" : "recent"; render(); }
+document.addEventListener("keydown", e => { if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !$("app").hidden) { e.preventDefault(); $("q").focus(); } });
+$("q").oninput = render; $("sort").onchange = render;
 
 function render() {
-  const q = $("q").value.trim().toLowerCase();
-  const list = items.filter(i => i.type === tab && (!q || (i.title + " " + (i.tags || []).join(" ") + " " + (i.desc || "")).toLowerCase().includes(q)));
-  const box = $("list"); box.innerHTML = "";
-  if (!list.length) {
-    const d = document.createElement("div"); d.className = "empty";
-    d.textContent = q ? "Aucun résultat." : "Rien ici pour l’instant. Ajoute le premier élément.";
-    box.append(d); return;
-  }
-  for (const i of list) {
-    const c = document.createElement("article"); c.className = "card";
-    const h = document.createElement("h3"); h.textContent = i.title;
-    const a = document.createElement("a"); a.href = i.url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = i.url;
-    c.append(h, a);
-    if (i.desc) { const p = document.createElement("p"); p.textContent = i.desc; c.append(p); }
-    if (i.tags && i.tags.length) {
-      const t = document.createElement("div"); t.className = "tags";
-      i.tags.forEach(x => { const s = document.createElement("span"); s.className = "tag"; s.textContent = x; t.append(s); });
-      c.append(t);
-    }
-    const m = document.createElement("div"); m.className = "meta";
-    const by = document.createElement("span"); by.textContent = "par " + (i.authorName || "membre"); m.append(by);
-    if (user && (i.uid === user.uid || ADMINS.includes(user.email))) {
-      const d = document.createElement("button"); d.className = "del"; d.textContent = "Supprimer";
-      d.onclick = async () => { if (confirm("Supprimer « " + i.title + " » ?")) await deleteDoc(doc(db, "items", i.id)); };
-      m.append(d);
-    }
-    c.append(m); box.append(c);
-  }
+  $("tabs").replaceChildren(...Object.entries(TABS).map(([k, [n]]) =>
+    el("button", {textContent: n, onclick: () => setTab(k)}, el("b", {textContent: items.filter(i => i.type === k).length}))));
+  [...$("tabs").children].forEach((b, i) => b.setAttribute("aria-pressed", Object.keys(TABS)[i] === tab));
+  $("add").hidden = tab === "file" && !isAdmin;
+  const q = $("q").value.trim().toLowerCase(), base = items.filter(i => i.type === tab);
+  const tags = [...new Set(base.flatMap(i => i.tags || []))].sort();
+  $("tagbar").replaceChildren(...tags.map(t => el("button", {className: "chip" + (t === tagF ? " on" : ""), textContent: t, onclick: () => { tagF = tagF === t ? "" : t; render(); }})));
+  const s = $("sort").value, today = new Date().toISOString().slice(0, 10);
+  const list = base.filter(i => (!tagF || (i.tags || []).includes(tagF)) && (!q || [i.title, i.desc, (i.tags || []).join(" ")].join(" ").toLowerCase().includes(q)))
+    .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (s === "az" ? a.title.localeCompare(b.title) : s === "date" ? (a.date || "9").localeCompare(b.date || "9") : b.createdAt - a.createdAt));
+  if (!list.length) { $("list").replaceChildren(el("div", {className: "empty", textContent: q || tagF ? "Aucun résultat." : "Rien ici pour l’instant."})); return; }
+  $("list").replaceChildren(...list.map(i => {
+    const can = isAdmin || i.uid === user.uid;
+    const link = i.type === "file" ? el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: "Télécharger " + (i.fileName || "") + (i.fileSize ? " (" + size(i.fileSize) + ")" : "")})
+      : i.type === "event" ? (i.url ? el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url}) : null)
+      : el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url});
+    const top = el("div", {className: "top"},
+      i.pinned && el("span", {textContent: "📌"}),
+      i.type === "project" && i.status && el("span", {className: "badge", textContent: STATUS[i.status]}),
+      i.type === "event" && i.date && el("span", {className: "badge", textContent: fdate(i.date)}));
+    return el("article", {className: "card" + (i.pinned ? " pin" : "") + (i.type === "event" && i.date < today ? " past" : ""), style: "border-left-color:" + TABS[i.type][1]},
+      top, el("h3", {textContent: i.title}), link,
+      i.desc && el("p", {textContent: i.desc}),
+      i.tags?.length && el("div", {className: "tags"}, ...i.tags.map(t => el("span", {className: "tag", textContent: t}))),
+      el("div", {className: "meta"}, el("span", {textContent: "par " + (i.authorName || "membre") + " · " + new Date(i.createdAt).toLocaleDateString("fr-FR")}),
+        can && el("div", {className: "acts"},
+          el("button", {className: "s", textContent: "Modifier", onclick: () => openDlg(i)}),
+          el("button", {className: "s x", textContent: "Supprimer", onclick: () => del(i)}))));
+  }));
 }
 
-$("add").onclick = () => {
-  $("dtitle").textContent = tab === "project" ? "Ajouter un projet" : "Ajouter un lien";
-  $("f").reset(); $("ferr").textContent = ""; $("dlg").showModal();
-};
+async function del(i) {
+  if (!confirm("Supprimer « " + i.title + " » ?")) return;
+  try { if (i.path) await deleteObject(ref(storage, i.path)).catch(() => {}); await deleteDoc(doc(db, "items", i.id)); toast("Supprimé"); }
+  catch (e) { toast("Suppression refusée : " + e.code); }
+}
+
+function openDlg(i) {
+  editing = i || null; const t = i ? i.type : tab;
+  $("f").reset(); $("ferr").textContent = ""; $("pg").hidden = true;
+  $("dtitle").textContent = (i ? "Modifier " : "Ajouter ") + ({project: "un projet", link: "un lien", file: "un fichier", event: "un événement"})[t];
+  $("wu").hidden = t === "file"; $("wf").hidden = t !== "file"; $("ws").hidden = t !== "project"; $("wd").hidden = t !== "event"; $("wp").hidden = !isAdmin;
+  $("fu").required = t === "project" || t === "link";
+  if (i) { $("ft").value = i.title; $("fu").value = i.url || ""; $("fd").value = i.desc || ""; $("fg").value = (i.tags || []).join(", "); $("fp").checked = !!i.pinned; if (i.status) $("fs").value = i.status; $("fdt").value = i.date || ""; }
+  $("dlg").showModal();
+}
+$("add").onclick = () => openDlg(null);
 $("cancel").onclick = () => $("dlg").close();
+$("dlg").addEventListener("click", e => { if (e.target === $("dlg")) $("dlg").close(); });
+
 $("f").onsubmit = async e => {
   e.preventDefault();
-  const url = $("fu").value.trim();
-  if (!/^https?:\/\//i.test(url)) { $("ferr").textContent = "L’URL doit commencer par http:// ou https://"; return; }
+  const t = editing ? editing.type : tab, url = $("fu").value.trim(), file = $("ff").files[0], err = $("ferr");
+  if (url && !/^https?:\/\//i.test(url)) { err.textContent = "L’URL doit commencer par http:// ou https://"; return; }
+  if (t === "event" && !$("fdt").value) { err.textContent = "Choisis une date."; return; }
+  if (t === "file" && !editing && !file) { err.textContent = "Choisis un fichier."; return; }
+  if (file && file.size > 20e6) { err.textContent = "Fichier trop gros (20 Mo max)."; return; }
+  const data = {title: $("ft").value.trim(), desc: $("fd").value.trim(), tags: $("fg").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 8)};
+  if (t !== "file") data.url = url;
+  if (isAdmin) data.pinned = $("fp").checked;
+  if (t === "project") data.status = $("fs").value;
+  if (t === "event") data.date = $("fdt").value;
+  $("save").disabled = true; err.textContent = "";
   try {
-    await addDoc(collection(db, "items"), {
-      type: tab, title: $("ft").value.trim(), url, desc: $("fd").value.trim(),
-      tags: $("fg").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 8),
-      uid: user.uid, authorName: user.displayName || user.email, createdAt: serverTimestamp()
-    });
-    $("dlg").close();
-  } catch (err) { $("ferr").textContent = "Enregistrement refusé : " + err.code; }
+    if (file) {
+      const path = "club/" + user.uid + "/" + Date.now() + "-" + file.name.replace(/[^\w.\-]/g, "_");
+      $("pg").hidden = false;
+      const task = uploadBytesResumable(ref(storage, path), file);
+      task.on("state_changed", s => $("pg").value = s.bytesTransferred / s.totalBytes * 100);
+      await task;
+      if (editing?.path) deleteObject(ref(storage, editing.path)).catch(() => {});
+      Object.assign(data, {url: await getDownloadURL(task.snapshot.ref), path, fileName: file.name, fileSize: file.size});
+    }
+    if (editing) await updateDoc(doc(db, "items", editing.id), data);
+    else await addDoc(collection(db, "items"), {...data, type: t, uid: user.uid, authorName: user.displayName || user.email, createdAt: serverTimestamp()});
+    $("dlg").close(); toast(editing ? "Modifié" : "Ajouté");
+  } catch (x) { err.textContent = "Refusé : " + x.code; }
+  $("save").disabled = false;
 };
 </script>
 </body>
