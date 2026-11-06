@@ -53,6 +53,8 @@ input[type=checkbox]{width:auto}
 .tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:0 8px;color:var(--mute)}
 .meta{font-size:.8rem;color:var(--mute);margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .acts{display:flex;gap:6px}
+.next{background:var(--hi);border:2px solid var(--ink);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-weight:600}
+.code pre{margin:0 0 6px;max-height:220px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;font-size:.8rem}
 dialog{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);width:min(460px,94vw);padding:18px;max-height:92vh}
 dialog::backdrop{background:rgba(0,0,0,.55)}
 label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
@@ -86,6 +88,7 @@ progress{width:100%}
     </form>
   </section>
   <section id="app" hidden>
+    <div id="next" class="next" hidden></div>
     <div class="tabs" id="tabs" role="group" aria-label="Catégorie"></div>
     <div class="bar">
       <input id="q" type="search" placeholder="Rechercher (touche /)" aria-label="Rechercher">
@@ -102,9 +105,10 @@ progress{width:100%}
     <h2 style="margin:0" id="dtitle"></h2>
     <label for="ft">Titre</label><input id="ft" required maxlength="80">
     <div id="wu"><label for="fu">URL</label><input id="fu" type="url" placeholder="https://…"></div>
-    <div id="wf"><label for="ff">Fichier (20 Mo max)</label><input id="ff" type="file"><progress id="pg" max="100" value="0" hidden></progress></div>
+    <div id="wf"><label for="ff">Fichier (700 Ko max)</label><input id="ff" type="file"></div>
+    <div id="wc"><label for="fc">Code</label><textarea id="fc" rows="8" maxlength="100000" spellcheck="false" style="font-family:ui-monospace,monospace;font-size:.85rem" placeholder="Colle ton code ici"></textarea></div>
     <div id="ws"><label for="fs">Statut</label><select id="fs"><option value="idea">💡 Idée</option><option value="wip" selected>🔧 En cours</option><option value="done">✅ Terminé</option></select></div>
-    <div id="wd"><label for="fdt">Date</label><input id="fdt" type="date"></div>
+    <div id="wd"><label for="fdt">Date (1ère séance)</label><input id="fdt" type="date"><label style="font-weight:400"><input type="checkbox" id="fw"> Répéter chaque semaine (ex. tous les lundis)</label></div>
     <label for="fd">Description</label><textarea id="fd" rows="3" maxlength="400"></textarea>
     <label for="fg">Tags (séparés par des virgules)</label><input id="fg" placeholder="python, web, jeu">
     <label id="wp"><input type="checkbox" id="fp"> Épingler en haut</label>
@@ -118,27 +122,27 @@ progress{width:100%}
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,sendPasswordResetEmail,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import {getStorage,ref,uploadBytesResumable,getDownloadURL,deleteObject} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
 // 1) Colle ta config Firebase (Paramètres du projet > Tes applications > Web)
 const firebaseConfig = {
   apiKey: "AIzaSyD6e0KRzJnRJvRsBDbD5O80TAAVjox1EmA",
   authDomain: "club-informatique-d7602.firebaseapp.com",
   projectId: "club-informatique-d7602",
-  storageBucket: "club-informatique-d7602.firebasestorage.app", // à remplacer par la valeur de la console une fois Storage activé
   appId: "1:1097808241048:web:3e9d86f704c4e55f9fcbed"
 };
 // 2) Admins : modifient/suppriment tout, épinglent, envoient des fichiers
-const ADMINS = ["ton.email@gmail.com"];
+const ADMINS = ["x.kaboom.x02@gmail.com"];
 
-const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app), storage = getStorage(app);
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
 const $ = id => document.getElementById(id);
 const el = (t, p = {}, ...c) => { const e = Object.assign(document.createElement(t), p); e.append(...c.filter(x => x != null && x !== false)); return e; };
-const TABS = {project: ["Projets", "#2b50ff"], link: ["Liens", "#0a7d4f"], file: ["Fichiers", "#c26a00"], event: ["Événements", "#a02bb5"]};
+const TABS = {project: ["Projets", "#2b50ff"], link: ["Liens", "#0a7d4f"], snippet: ["Code", "#d62f6f"], file: ["Fichiers", "#c26a00"], event: ["Événements", "#a02bb5"]};
 const STATUS = {idea: "💡 Idée", wip: "🔧 En cours", done: "✅ Terminé"};
 let user = null, isAdmin = false, tab = "project", items = [], unsub = null, tagF = "", editing = null;
 
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const nd = i => { if (i.type !== "event" || !i.date || !i.weekly) return i.date; const d = new Date(i.date + "T00:00"), t = new Date(); t.setHours(0, 0, 0, 0); if (d < t) d.setDate(d.getDate() + Math.ceil(Math.round((t - d) / 864e5) / 7) * 7); return iso(d); };
 const size = n => n > 1e6 ? (n / 1e6).toFixed(1) + " Mo" : Math.max(1, Math.round(n / 1e3)) + " Ko";
 const fdate = d => new Date(d + "T00:00").toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "long", year: "numeric"});
 
@@ -176,23 +180,26 @@ function render() {
     el("button", {textContent: n, onclick: () => setTab(k)}, el("b", {textContent: items.filter(i => i.type === k).length}))));
   [...$("tabs").children].forEach((b, i) => b.setAttribute("aria-pressed", Object.keys(TABS)[i] === tab));
   $("add").hidden = tab === "file" && !isAdmin;
+  const todayS = iso(new Date()), up = items.filter(i => i.type === "event" && i.date).map(i => ({i, d: nd(i)})).filter(x => x.d >= todayS).sort((a, b) => a.d.localeCompare(b.d))[0];
+  $("next").hidden = !up; if (up) $("next").textContent = "📅 Prochaine séance : " + up.i.title + " — " + fdate(up.d);
   const q = $("q").value.trim().toLowerCase(), base = items.filter(i => i.type === tab);
   const tags = [...new Set(base.flatMap(i => i.tags || []))].sort();
   $("tagbar").replaceChildren(...tags.map(t => el("button", {className: "chip" + (t === tagF ? " on" : ""), textContent: t, onclick: () => { tagF = tagF === t ? "" : t; render(); }})));
-  const s = $("sort").value, today = new Date().toISOString().slice(0, 10);
+  const s = $("sort").value, today = iso(new Date());
   const list = base.filter(i => (!tagF || (i.tags || []).includes(tagF)) && (!q || [i.title, i.desc, (i.tags || []).join(" ")].join(" ").toLowerCase().includes(q)))
-    .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (s === "az" ? a.title.localeCompare(b.title) : s === "date" ? (a.date || "9").localeCompare(b.date || "9") : b.createdAt - a.createdAt));
+    .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (s === "az" ? a.title.localeCompare(b.title) : s === "date" ? (nd(a) || "9").localeCompare(nd(b) || "9") : b.createdAt - a.createdAt));
   if (!list.length) { $("list").replaceChildren(el("div", {className: "empty", textContent: q || tagF ? "Aucun résultat." : "Rien ici pour l’instant."})); return; }
   $("list").replaceChildren(...list.map(i => {
     const can = isAdmin || i.uid === user.uid;
-    const link = i.type === "file" ? el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: "Télécharger " + (i.fileName || "") + (i.fileSize ? " (" + size(i.fileSize) + ")" : "")})
+    const link = i.type === "file" ? el("a", {href: "data:" + (i.mime || "application/octet-stream") + ";base64," + i.data, download: i.fileName || "fichier", textContent: "Télécharger " + (i.fileName || "") + (i.fileSize ? " (" + size(i.fileSize) + ")" : "")})
+      : i.type === "snippet" ? el("div", {className: "code"}, el("pre", {textContent: i.code}), el("button", {className: "s", textContent: "Copier", onclick: () => navigator.clipboard.writeText(i.code).then(() => toast("Code copié"))}))
       : i.type === "event" ? (i.url ? el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url}) : null)
       : el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url});
     const top = el("div", {className: "top"},
       i.pinned && el("span", {textContent: "📌"}),
       i.type === "project" && i.status && el("span", {className: "badge", textContent: STATUS[i.status]}),
-      i.type === "event" && i.date && el("span", {className: "badge", textContent: fdate(i.date)}));
-    return el("article", {className: "card" + (i.pinned ? " pin" : "") + (i.type === "event" && i.date < today ? " past" : ""), style: "border-left-color:" + TABS[i.type][1]},
+      i.type === "event" && i.date && el("span", {className: "badge", textContent: fdate(nd(i)) + (i.weekly ? " · chaque semaine" : "")}));
+    return el("article", {className: "card" + (i.pinned ? " pin" : "") + (i.type === "event" && nd(i) < today ? " past" : ""), style: "border-left-color:" + TABS[i.type][1]},
       top, el("h3", {textContent: i.title}), link,
       i.desc && el("p", {textContent: i.desc}),
       i.tags?.length && el("div", {className: "tags"}, ...i.tags.map(t => el("span", {className: "tag", textContent: t}))),
@@ -205,17 +212,17 @@ function render() {
 
 async function del(i) {
   if (!confirm("Supprimer « " + i.title + " » ?")) return;
-  try { if (i.path) await deleteObject(ref(storage, i.path)).catch(() => {}); await deleteDoc(doc(db, "items", i.id)); toast("Supprimé"); }
+  try { await deleteDoc(doc(db, "items", i.id)); toast("Supprimé"); }
   catch (e) { toast("Suppression refusée : " + e.code); }
 }
 
 function openDlg(i) {
   editing = i || null; const t = i ? i.type : tab;
-  $("f").reset(); $("ferr").textContent = ""; $("pg").hidden = true;
-  $("dtitle").textContent = (i ? "Modifier " : "Ajouter ") + ({project: "un projet", link: "un lien", file: "un fichier", event: "un événement"})[t];
-  $("wu").hidden = t === "file"; $("wf").hidden = t !== "file"; $("ws").hidden = t !== "project"; $("wd").hidden = t !== "event"; $("wp").hidden = !isAdmin;
+  $("f").reset(); $("ferr").textContent = "";
+  $("dtitle").textContent = (i ? "Modifier " : "Ajouter ") + ({project: "un projet", link: "un lien", snippet: "un code", file: "un fichier", event: "un événement"})[t];
+  $("wu").hidden = t === "file" || t === "snippet"; $("wf").hidden = t !== "file"; $("wc").hidden = t !== "snippet"; $("fc").required = t === "snippet"; $("ws").hidden = t !== "project"; $("wd").hidden = t !== "event"; $("wp").hidden = !isAdmin;
   $("fu").required = t === "project" || t === "link";
-  if (i) { $("ft").value = i.title; $("fu").value = i.url || ""; $("fd").value = i.desc || ""; $("fg").value = (i.tags || []).join(", "); $("fp").checked = !!i.pinned; if (i.status) $("fs").value = i.status; $("fdt").value = i.date || ""; }
+  if (i) { $("ft").value = i.title; $("fu").value = i.url || ""; $("fd").value = i.desc || ""; $("fg").value = (i.tags || []).join(", "); $("fp").checked = !!i.pinned; if (i.status) $("fs").value = i.status; $("fdt").value = i.date || ""; $("fc").value = i.code || ""; $("fw").checked = !!i.weekly; }
   $("dlg").showModal();
 }
 $("add").onclick = () => openDlg(null);
@@ -228,22 +235,18 @@ $("f").onsubmit = async e => {
   if (url && !/^https?:\/\//i.test(url)) { err.textContent = "L’URL doit commencer par http:// ou https://"; return; }
   if (t === "event" && !$("fdt").value) { err.textContent = "Choisis une date."; return; }
   if (t === "file" && !editing && !file) { err.textContent = "Choisis un fichier."; return; }
-  if (file && file.size > 20e6) { err.textContent = "Fichier trop gros (20 Mo max)."; return; }
+  if (file && file.size > 690000) { err.textContent = "Fichier trop gros (700 Ko max)."; return; }
   const data = {title: $("ft").value.trim(), desc: $("fd").value.trim(), tags: $("fg").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 8)};
-  if (t !== "file") data.url = url;
+  if (t === "project" || t === "link" || t === "event") data.url = url;
+  if (t === "snippet") data.code = $("fc").value;
   if (isAdmin) data.pinned = $("fp").checked;
   if (t === "project") data.status = $("fs").value;
-  if (t === "event") data.date = $("fdt").value;
+  if (t === "event") { data.date = $("fdt").value; data.weekly = $("fw").checked; }
   $("save").disabled = true; err.textContent = "";
   try {
     if (file) {
-      const path = "club/" + user.uid + "/" + Date.now() + "-" + file.name.replace(/[^\w.\-]/g, "_");
-      $("pg").hidden = false;
-      const task = uploadBytesResumable(ref(storage, path), file);
-      task.on("state_changed", s => $("pg").value = s.bytesTransferred / s.totalBytes * 100);
-      await task;
-      if (editing?.path) deleteObject(ref(storage, editing.path)).catch(() => {});
-      Object.assign(data, {url: await getDownloadURL(task.snapshot.ref), path, fileName: file.name, fileSize: file.size});
+      const b64 = await new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = ko; r.readAsDataURL(file); });
+      Object.assign(data, {data: b64, mime: file.type, fileName: file.name, fileSize: file.size});
     }
     if (editing) await updateDoc(doc(db, "items", editing.id), data);
     else await addDoc(collection(db, "items"), {...data, type: t, uid: user.uid, authorName: user.displayName || user.email, createdAt: serverTimestamp()});
