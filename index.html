@@ -3,102 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Club Info</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Club Informatique — Espace des membres</title>
+<meta name="description" content="Espace numérique du club informatique du collège : projets, ressources, fichiers et calendrier des séances.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f7fb;--ink:#14213d;--mute:#5b6478;--line:#cfd5e4;--card:#fff;--acc:#2b50ff;--hi:#ffe566;--bad:#c0392b}
-@media(prefers-color-scheme:dark){:root{--bg:#10131c;--ink:#e8ecf7;--mute:#98a1b8;--line:#2a3144;--card:#181d2a;--acc:#7b93ff;--hi:#5a4b00;--bad:#ff7b6b}}
+:root{--bg:#f4f6fb;--surf:#fff;--ink:#0f1b3d;--mute:#5a6580;--line:#e1e6f1;--acc:#2447e6;--acc2:#1a35b8;--soft:#e8edff;--bad:#c0392b;--sh:0 1px 2px rgba(15,27,61,.06),0 8px 24px rgba(15,27,61,.06);--r:14px}
+@media(prefers-color-scheme:dark){:root{--bg:#0d111c;--surf:#151b2b;--ink:#eaeefb;--mute:#97a2bd;--line:#252d42;--acc:#7f97ff;--acc2:#a3b3ff;--soft:#1c2540;--bad:#ff7b6b;--sh:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3)}}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Bricolage Grotesque",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;
-background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;background-attachment:fixed}
-body::before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.9;z-index:-1}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 20px;border-bottom:2px solid var(--ink);background:var(--bg);flex-wrap:wrap;position:sticky;top:0;z-index:5}
-h1{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
-h1 span{background:var(--hi);padding:0 6px}
-main{max-width:1000px;margin:0 auto;padding:20px}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--acc)}
 button,input,textarea,select{font:inherit;color:inherit}
-button{cursor:pointer;border:2px solid var(--ink);background:var(--card);padding:7px 13px;border-radius:6px;font-weight:600}
-button:hover{background:var(--hi);color:#14213d}
+button{cursor:pointer;border:1px solid var(--line);background:var(--surf);padding:9px 16px;border-radius:10px;font-weight:600;transition:.15s}
+button:hover{border-color:var(--acc);color:var(--acc)}
 button:disabled{opacity:.5;cursor:wait}
 button.p{background:var(--acc);border-color:var(--acc);color:#fff}
-button.p:hover{filter:brightness(1.12);background:var(--acc);color:#fff}
-button.s{padding:2px 9px;font-size:.8rem}
+button.p:hover{background:var(--acc2);border-color:var(--acc2);color:#fff}
+button.s{padding:5px 11px;font-size:.82rem;border-radius:8px}
 button.x:hover{background:var(--bad);border-color:var(--bad);color:#fff}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-input,textarea,select{width:100%;padding:9px 10px;border:2px solid var(--line);border-radius:6px;background:var(--card)}
+input,textarea,select{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surf)}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);outline:3px solid var(--soft)}
 input[type=checkbox]{width:auto}
-.gate{text-align:center;padding:56px 12px}
-.gate h2{font-size:2rem;margin:0 0 8px}
-.gate p{color:var(--mute);max-width:46ch;margin:0 auto 20px}
-.tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
-.tabs button{white-space:nowrap}
-.tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-.tabs b{font-weight:400;opacity:.7;margin-left:4px}
-.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.bar input{flex:1 1 200px}
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--surf) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.01em}
+.logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--acc),#6a3df0);color:#fff;display:grid;place-items:center;font-size:.95rem;font-family:ui-monospace,monospace}
+.brand small{display:block;font-weight:500;color:var(--mute);font-size:.78rem;line-height:1.1}
+.user{display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--mute)}
+.adm{background:var(--soft);color:var(--acc);border-radius:99px;padding:2px 10px;font-size:.72rem;font-weight:700}
+main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:28px 24px 48px}
+.hero{background:linear-gradient(135deg,#1a2a6c,#2447e6 60%,#6a3df0);color:#fff;border-radius:22px;padding:44px 36px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.hero::after{content:"</>";position:absolute;right:28px;bottom:-30px;font:800 9rem ui-monospace,monospace;opacity:.08}
+.hero h1{margin:0 0 10px;font-size:clamp(1.8rem,4vw,2.7rem);letter-spacing:-.03em;line-height:1.1}
+.hero p{margin:0;max-width:56ch;opacity:.92;font-size:1.05rem}
+.infos{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.infos span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:99px;font-size:.88rem;font-weight:600}
+.gate{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:28px;margin-top:28px;align-items:start}
+.card,.box{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+.box{padding:26px}
+.box h2{margin:0 0 6px;font-size:1.3rem}
+.box p{color:var(--mute);margin:0 0 8px}
+.feat{display:grid;gap:14px}
+.feat div{display:flex;gap:14px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.feat b{display:block}
+.feat span{color:var(--mute);font-size:.92rem}
+.ico{flex:none;width:40px;height:40px;border-radius:10px;background:var(--soft);display:grid;place-items:center;font-size:1.25rem}
+label{display:block;font-weight:600;margin:14px 0 5px;font-size:.88rem}
+.err{color:var(--bad);font-size:.88rem;margin-top:10px;min-height:1.2em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:22px}
+.stat{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+.stat b{display:block;font-size:1.7rem;letter-spacing:-.02em;line-height:1.1}
+.stat span{color:var(--mute);font-size:.82rem;font-weight:500}
+.next{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:var(--r);padding:14px 18px;margin-bottom:22px;font-weight:600}
+.tabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;padding:5px;background:var(--surf);border:1px solid var(--line);border-radius:12px;width:fit-content;max-width:100%}
+.tabs button{white-space:nowrap;border:0;background:none;padding:8px 16px}
+.tabs button[aria-pressed=true]{background:var(--acc);color:#fff}
+.tabs b{font-weight:600;opacity:.7;margin-left:6px;font-size:.8rem}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bar input{flex:1 1 220px}
 .bar select{width:auto}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.chip{padding:1px 10px;font-size:.82rem;border:1px solid var(--line);border-radius:99px;font-weight:400;color:var(--mute)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.chip{padding:3px 12px;font-size:.8rem;border-radius:99px;color:var(--mute)}
 .chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.card{background:var(--card);border:2px solid var(--ink);border-left-width:8px;border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
-.card.pin{border-color:var(--ink);box-shadow:4px 4px 0 var(--hi)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.card{padding:18px;display:flex;flex-direction:column;gap:10px;border-top:4px solid var(--c,var(--acc));transition:.2s}
+.card:hover{transform:translateY(-3px)}
+.card.pin{background:linear-gradient(var(--soft),var(--surf) 60%)}
 .card.past{opacity:.55}
-.card h3{margin:0;font-size:1.1rem}
-.card p{margin:0;color:var(--mute);font-size:.95rem;white-space:pre-wrap}
-.card a{color:var(--acc);font-weight:600;word-break:break-all}
-.top{display:flex;gap:6px;align-items:center;font-size:.82rem;color:var(--mute)}
-.badge{border:1px solid var(--line);border-radius:4px;padding:0 7px;background:var(--bg)}
+.card h3{margin:0;font-size:1.08rem;letter-spacing:-.01em}
+.card p{margin:0;color:var(--mute);font-size:.92rem;white-space:pre-wrap}
+.card a{font-weight:600;font-size:.9rem;word-break:break-all}
+.top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:.8rem}
+.badge{border-radius:99px;padding:2px 10px;background:var(--soft);color:var(--acc);font-weight:600}
 .tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:0 8px;color:var(--mute)}
-.meta{font-size:.8rem;color:var(--mute);margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:.74rem;background:var(--bg);border-radius:6px;padding:2px 8px;color:var(--mute)}
+.meta{font-size:.78rem;color:var(--mute);margin-top:auto;padding-top:10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .acts{display:flex;gap:6px}
-.next{background:var(--hi);border:2px solid var(--ink);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-weight:600}
-.code pre{margin:0 0 6px;max-height:220px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px;font-size:.8rem}
-dialog{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);width:min(460px,94vw);padding:18px;max-height:92vh}
-dialog::backdrop{background:rgba(0,0,0,.55)}
-label{display:block;font-weight:600;margin:10px 0 4px;font-size:.9rem}
-.row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-.empty{padding:36px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:8px;grid-column:1/-1}
-.err{color:var(--bad);font-size:.9rem;margin-top:8px;min-height:1em}
-.user{display:flex;align-items:center;gap:10px;font-size:.9rem}
-.adm{background:var(--hi);color:#14213d;border-radius:4px;padding:0 6px;font-size:.75rem;font-weight:700}
-progress{width:100%}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.code pre{margin:0 0 8px;max-height:220px;overflow:auto;background:#0d1224;color:#d6def7;border-radius:10px;padding:12px;font-size:.8rem}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--surf);color:var(--ink);width:min(480px,94vw);padding:24px;max-height:92vh;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(8,12,28,.6);backdrop-filter:blur(3px)}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.empty{padding:44px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:var(--r);grid-column:1/-1}
+footer{border-top:1px solid var(--line);background:var(--surf);color:var(--mute);font-size:.85rem}
+footer div{max-width:1120px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
 #toast.on{opacity:1}
 [hidden]{display:none!important}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:760px){.gate{grid-template-columns:1fr}.hero{padding:30px 22px}main,.nav{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<header>
-  <h1>Club <span>Info</span></h1>
-  <div class="user" id="user" hidden><span id="uname"></span><span class="adm" id="adm" hidden>admin</span><button class="s" id="out">Déconnexion</button></div>
-</header>
+<header><div class="nav">
+  <div class="brand"><div class="logo">&lt;/&gt;</div><div><span id="bn"></span><small id="bs"></small></div></div>
+  <div class="user" id="user" hidden><span id="uname"></span><span class="adm" id="adm" hidden>Administrateur</span><button class="s" id="out">Déconnexion</button></div>
+</div></header>
 <main>
-  <section class="gate" id="gate">
-    <h2>Réservé aux membres du club</h2>
-    <p>Connecte-toi avec ton compte du club pour voir les projets, liens, fichiers et événements.</p>
-    <form id="login" style="max-width:320px;margin:0 auto;text-align:left">
-      <label for="le">Email</label><input id="le" type="email" autocomplete="username" required>
-      <label for="lp">Mot de passe</label><input id="lp" type="password" autocomplete="current-password" required>
-      <button class="p" type="submit" style="width:100%;margin-top:16px">Se connecter</button>
-      <button type="button" class="s" id="reset" style="margin-top:10px;border-color:var(--line)">Mot de passe oublié ?</button>
-      <div class="err" id="gerr" role="alert"></div>
-    </form>
+  <section class="hero">
+    <h1 id="ht"></h1>
+    <p id="hp"></p>
+    <div class="infos" id="hi"></div>
   </section>
-  <section id="app" hidden>
+  <section class="gate" id="gate">
+    <div class="feat">
+      <div><span class="ico">🚀</span><p style="margin:0"><b>Projets</b><span>Suis l’avancement des projets du club, de l’idée à la version finale.</span></p></div>
+      <div><span class="ico">🔗</span><p style="margin:0"><b>Ressources</b><span>Liens utiles, extraits de code et fichiers partagés par les membres.</span></p></div>
+      <div><span class="ico">📅</span><p style="margin:0"><b>Calendrier</b><span>Retrouve la date de la prochaine séance et les événements à venir.</span></p></div>
+    </div>
+    <div class="box">
+      <h2>Espace des membres</h2>
+      <p>Connecte-toi avec le compte fourni par ton professeur.</p>
+      <form id="login">
+        <label for="le">Adresse e-mail</label><input id="le" type="email" autocomplete="username" required>
+        <label for="lp">Mot de passe</label><input id="lp" type="password" autocomplete="current-password" required>
+        <button class="p" type="submit" style="width:100%;margin-top:20px">Se connecter</button>
+        <button type="button" class="s" id="reset" style="margin-top:10px;width:100%;border:0;color:var(--mute)">Mot de passe oublié ?</button>
+        <div class="err" id="gerr" role="alert"></div>
+      </form>
+    </div>
+  </section>
+  <section id="app" hidden style="margin-top:28px">
+    <div class="stats" id="stats"></div>
     <div id="next" class="next" hidden></div>
     <div class="tabs" id="tabs" role="group" aria-label="Catégorie"></div>
     <div class="bar">
       <input id="q" type="search" placeholder="Rechercher (touche /)" aria-label="Rechercher">
       <select id="sort" aria-label="Trier"><option value="recent">Plus récents</option><option value="az">A → Z</option><option value="date">Date d’événement</option></select>
-      <button class="p" id="add">Ajouter</button>
+      <button class="p" id="add">+ Ajouter</button>
     </div>
     <div class="chips" id="tagbar"></div>
     <div class="grid" id="list"></div>
   </section>
 </main>
+<footer><div><span id="ft2"></span><span>Espace réservé aux membres · Merci de respecter la charte informatique de l’établissement</span></div></footer>
 
 <dialog id="dlg">
   <form method="dialog" id="f">
@@ -123,22 +161,32 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase
 import {getAuth,signInWithEmailAndPassword,sendPasswordResetEmail,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-// 1) Colle ta config Firebase (Paramètres du projet > Tes applications > Web)
 const firebaseConfig = {
   apiKey: "AIzaSyD6e0KRzJnRJvRsBDbD5O80TAAVjox1EmA",
   authDomain: "club-informatique-d7602.firebaseapp.com",
   projectId: "club-informatique-d7602",
   appId: "1:1097808241048:web:3e9d86f704c4e55f9fcbed"
 };
-// 2) Admins : modifient/suppriment tout, épinglent, envoient des fichiers
 const ADMINS = ["x.kaboom.x02@gmail.com"];
+// À personnaliser : textes affichés sur le site
+const CLUB = {
+  nom: "Club Informatique",
+  etab: "Collège — CDI",            // ex. « Collège Jean Moulin — CDI »
+  accroche: "Programmer, créer, partager.",
+  texte: "Un espace pour apprendre le code, mener des projets en équipe et partager nos découvertes numériques.",
+  infos: ["📅 Tous les lundis", "📍 Salle du CDI", "👩‍🏫 Encadré par le professeur documentaliste"]
+};
 
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
 const $ = id => document.getElementById(id);
 const el = (t, p = {}, ...c) => { const e = Object.assign(document.createElement(t), p); e.append(...c.filter(x => x != null && x !== false)); return e; };
-const TABS = {project: ["Projets", "#2b50ff"], link: ["Liens", "#0a7d4f"], snippet: ["Code", "#d62f6f"], file: ["Fichiers", "#c26a00"], event: ["Événements", "#a02bb5"]};
+const TABS = {project: ["Projets", "#2447e6"], link: ["Liens", "#0a7d4f"], snippet: ["Code", "#d62f6f"], file: ["Fichiers", "#c26a00"], event: ["Événements", "#8e2bb5"]};
 const STATUS = {idea: "💡 Idée", wip: "🔧 En cours", done: "✅ Terminé"};
 let user = null, isAdmin = false, tab = "project", items = [], unsub = null, tagF = "", editing = null;
+
+$("bn").textContent = CLUB.nom; $("bs").textContent = CLUB.etab; $("ht").textContent = CLUB.accroche; $("hp").textContent = CLUB.texte;
+$("hi").replaceChildren(...CLUB.infos.map(t => el("span", {textContent: t})));
+$("ft2").textContent = "© " + new Date().getFullYear() + " " + CLUB.nom + " · " + CLUB.etab;
 
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2600); }
 const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -151,12 +199,12 @@ $("login").onsubmit = async e => {
   try { await signInWithEmailAndPassword(auth, $("le").value.trim(), $("lp").value); $("lp").value = ""; }
   catch (err) {
     const bad = ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"];
-    $("gerr").textContent = bad.includes(err.code) ? "Email ou mot de passe incorrect." : err.code === "auth/too-many-requests" ? "Trop d’essais. Réessaie dans quelques minutes." : "Connexion impossible : " + err.code;
+    $("gerr").textContent = bad.includes(err.code) ? "E-mail ou mot de passe incorrect." : err.code === "auth/too-many-requests" ? "Trop d’essais. Réessaie dans quelques minutes." : "Connexion impossible : " + err.code;
   }
 };
 $("reset").onclick = async () => {
-  const m = $("le").value.trim(); if (!m) { $("gerr").textContent = "Entre ton email d’abord."; return; }
-  try { await sendPasswordResetEmail(auth, m); $("gerr").textContent = "Email de réinitialisation envoyé."; } catch (e) { $("gerr").textContent = "Envoi impossible : " + e.code; }
+  const m = $("le").value.trim(); if (!m) { $("gerr").textContent = "Entre ton e-mail d’abord."; return; }
+  try { await sendPasswordResetEmail(auth, m); $("gerr").textContent = "E-mail de réinitialisation envoyé."; } catch (e) { $("gerr").textContent = "Envoi impossible : " + e.code; }
 };
 $("out").onclick = () => signOut(auth);
 
@@ -176,22 +224,24 @@ document.addEventListener("keydown", e => { if (e.key === "/" && !/INPUT|TEXTARE
 $("q").oninput = render; $("sort").onchange = render;
 
 function render() {
+  const cnt = k => items.filter(i => i.type === k).length;
+  $("stats").replaceChildren(...Object.entries(TABS).map(([k, [n]]) => el("div", {className: "stat"}, el("b", {textContent: cnt(k)}), el("span", {textContent: n}))));
   $("tabs").replaceChildren(...Object.entries(TABS).map(([k, [n]]) =>
-    el("button", {textContent: n, onclick: () => setTab(k)}, el("b", {textContent: items.filter(i => i.type === k).length}))));
+    el("button", {textContent: n, onclick: () => setTab(k)}, el("b", {textContent: cnt(k)}))));
   [...$("tabs").children].forEach((b, i) => b.setAttribute("aria-pressed", Object.keys(TABS)[i] === tab));
   $("add").hidden = tab === "file" && !isAdmin;
   const todayS = iso(new Date()), up = items.filter(i => i.type === "event" && i.date).map(i => ({i, d: nd(i)})).filter(x => x.d >= todayS).sort((a, b) => a.d.localeCompare(b.d))[0];
   $("next").hidden = !up; if (up) $("next").textContent = "📅 Prochaine séance : " + up.i.title + " — " + fdate(up.d);
   const q = $("q").value.trim().toLowerCase(), base = items.filter(i => i.type === tab);
   const tags = [...new Set(base.flatMap(i => i.tags || []))].sort();
-  $("tagbar").replaceChildren(...tags.map(t => el("button", {className: "chip" + (t === tagF ? " on" : ""), textContent: t, onclick: () => { tagF = tagF === t ? "" : t; render(); }})));
+  $("tagbar").replaceChildren(...tags.map(t => el("button", {className: "chip s" + (t === tagF ? " on" : ""), textContent: t, onclick: () => { tagF = tagF === t ? "" : t; render(); }})));
   const s = $("sort").value, today = iso(new Date());
   const list = base.filter(i => (!tagF || (i.tags || []).includes(tagF)) && (!q || [i.title, i.desc, (i.tags || []).join(" ")].join(" ").toLowerCase().includes(q)))
     .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || (s === "az" ? a.title.localeCompare(b.title) : s === "date" ? (nd(a) || "9").localeCompare(nd(b) || "9") : b.createdAt - a.createdAt));
   if (!list.length) { $("list").replaceChildren(el("div", {className: "empty", textContent: q || tagF ? "Aucun résultat." : "Rien ici pour l’instant."})); return; }
   $("list").replaceChildren(...list.map(i => {
     const can = isAdmin || i.uid === user.uid;
-    const link = i.type === "file" ? el("a", {href: "data:" + (i.mime || "application/octet-stream") + ";base64," + i.data, download: i.fileName || "fichier", textContent: "Télécharger " + (i.fileName || "") + (i.fileSize ? " (" + size(i.fileSize) + ")" : "")})
+    const link = i.type === "file" ? el("a", {href: "data:" + (i.mime || "application/octet-stream") + ";base64," + i.data, download: i.fileName || "fichier", textContent: "⬇ Télécharger " + (i.fileName || "") + (i.fileSize ? " (" + size(i.fileSize) + ")" : "")})
       : i.type === "snippet" ? el("div", {className: "code"}, el("pre", {textContent: i.code}), el("button", {className: "s", textContent: "Copier", onclick: () => navigator.clipboard.writeText(i.code).then(() => toast("Code copié"))}))
       : i.type === "event" ? (i.url ? el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url}) : null)
       : el("a", {href: i.url, target: "_blank", rel: "noopener noreferrer", textContent: i.url});
@@ -199,7 +249,7 @@ function render() {
       i.pinned && el("span", {textContent: "📌"}),
       i.type === "project" && i.status && el("span", {className: "badge", textContent: STATUS[i.status]}),
       i.type === "event" && i.date && el("span", {className: "badge", textContent: fdate(nd(i)) + (i.weekly ? " · chaque semaine" : "")}));
-    return el("article", {className: "card" + (i.pinned ? " pin" : "") + (i.type === "event" && nd(i) < today ? " past" : ""), style: "border-left-color:" + TABS[i.type][1]},
+    return el("article", {className: "card" + (i.pinned ? " pin" : "") + (i.type === "event" && nd(i) < today ? " past" : ""), style: "--c:" + TABS[i.type][1]},
       top, el("h3", {textContent: i.title}), link,
       i.desc && el("p", {textContent: i.desc}),
       i.tags?.length && el("div", {className: "tags"}, ...i.tags.map(t => el("span", {className: "tag", textContent: t}))),
